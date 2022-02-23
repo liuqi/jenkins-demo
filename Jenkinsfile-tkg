@@ -4,6 +4,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh 'ls -la'
+                sh "chmod +x -R ${env.WORKSPACE}"
                 retry(3) {
                     sh './tkg-cluster-deployer-zyj.sh'
                 }
