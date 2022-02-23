@@ -1,0 +1,59 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+bases:
+- ../platform-agnostic-multi-user
+
+patchesStrategicMerge:
+- workflow-controller-configmap-patch.yaml
+images:
+- name: docker.io/istio/proxyv2:1.9.6
+  newName: harbor-repo.vmware.com/mlops/istio-proxyv2
+  newTag: 1.9.6
+- name: gcr.io/ml-pipeline/api-server
+  newName: harbor-repo.vmware.com/mlops/api-server
+  newTag: 1.7.0
+- name: gcr.io/ml-pipeline/cache-deployer
+  newName: harbor-repo.vmware.com/mlops/cache-deployer
+  newTag: 1.7.0
+- name: gcr.io/ml-pipeline/cache-server
+  newName: harbor-repo.vmware.com/mlops/cache-server
+  newTag: 1.7.0
+- name: gcr.io/ml-pipeline/frontend
+  newName: harbor-repo.vmware.com/mlops/frontend
+  newTag: 1.7.0
+- name: gcr.io/ml-pipeline/metadata-envoy
+  newName: harbor-repo.vmware.com/mlops/metadata-envoy
+  newTag: 1.7.0
+- name: gcr.io/ml-pipeline/metadata-writer
+  newName: harbor-repo.vmware.com/mlops/metadata-writer
+  newTag: 1.7.0
+- name: gcr.io/ml-pipeline/minio
+  newName: harbor-repo.vmware.com/mlops/minio
+  newTag: RELEASE.2019-08-14T20-37-41Z-license-compliance
+- name: gcr.io/ml-pipeline/mysql
+  newName: harbor-repo.vmware.com/mlops/mysql
+  newTag: "5.7"
+- name: gcr.io/ml-pipeline/persistenceagent
+  newName: harbor-repo.vmware.com/mlops/persistenceagent
+  newTag: 1.7.0
+- name: gcr.io/ml-pipeline/scheduledworkflow
+  newName: harbor-repo.vmware.com/mlops/scheduledworkflow
+  newTag: 1.7.0
+- name: gcr.io/ml-pipeline/viewer-crd-controller
+  newName: harbor-repo.vmware.com/mlops/viewer-crd-controller
+  newTag: 1.7.0
+- name: gcr.io/ml-pipeline/visualization-server
+  newName: harbor-repo.vmware.com/mlops/visualization-server
+  newTag: 1.7.0
+- name: gcr.io/ml-pipeline/workflow-controller
+  newName: harbor-repo.vmware.com/mlops/workflow-controller
+  newTag: v3.1.6-patch-license-compliance
+- name: gcr.io/tfx-oss-public/ml_metadata_store_server
+  newName: harbor-repo.vmware.com/mlops/ml_metadata_store_server
+  newTag: 1.0.0
+- name: metacontroller/metacontroller
+  newName: harbor-repo.vmware.com/mlops/metacontroller
+  newTag: v0.3.0
+- name: python
+  newName: harbor-repo.vmware.com/mlops/python
+  newTag: "3.7"

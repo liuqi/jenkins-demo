@@ -1,0 +1,33 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- ../../base
+- virtual-service.yaml
+
+namespace: auth
+
+vars:
+- name: DEX_SERVICE
+  objref:
+    kind: Service
+    name: dex
+    apiVersion: v1
+  fieldref:
+    fieldpath: metadata.name
+- name: DEX_NAMESPACE
+  objref:
+    kind: Service
+    name: dex
+    apiVersion: v1
+  fieldref:
+    fieldpath: metadata.namespace
+configurations:
+- params.yaml
+images:
+- name: quay.io/dexidp/dex:v2.24.0
+  newName: harbor-repo.vmware.com/mlops/dex
+  newTag: v2.24.0
+- name: docker.io/istio/proxyv2
+  newName: harbor-repo.vmware.com/mlops/istio-proxyv2
+  newTag: 1.9.6

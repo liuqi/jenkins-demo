@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+    stages {
+        stage('DeployTKG') {
+            steps {
+                sh 'ls -la'
+                retry(3) {
+                    sh './tkg-cluster-deployer-zyj.sh'
+                }
+                sh 'ls -la'
+            }
+        }
+        stage('DeployKubeflow') {
+            steps {
+                sh 'ls -la'
+                retry(3) {
+                    sh './kubeflow-deployer.sh'
+                }
+                sh 'ls -la'
+            }
+        }
+    }
+}

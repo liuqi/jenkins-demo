@@ -1,0 +1,36 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- upstream/serving-core.yaml
+- upstream/net-istio.yaml
+- istio-authorization-policy.yaml
+patchesStrategicMerge:
+- patches/configmap-patch.yaml
+- patches/namespace-injection.yaml
+- patches/clusterrole-patch.yaml
+patches:
+- path: patches/sidecar-injection.yaml
+  target:
+    kind: Deployment
+images:
+- name: gcr.io/knative-releases/knative.dev/net-istio/cmd/controller@sha256:ff8680da52ef47b8573ebc3393cbfa2f0f14b05c1e02232807f22699adbef57a
+  newName: harbor-repo.vmware.com/mlops/controller
+  newTag: v1.0-kubeflow-knative-serving-net-istio
+- name: gcr.io/knative-releases/knative.dev/net-istio/cmd/webhook@sha256:1e371db6b1a9f9265fc7a55d15d98c935c0c28925ffde351fb3b93f331c5a08e
+  newName: harbor-repo.vmware.com/mlops/webhook
+  newTag: v1.0-kubeflow-knative-serving-net-istio
+- name: gcr.io/knative-releases/knative.dev/serving/cmd/activator@sha256:fed92af8b9779c97482906db8857f27b5d4826708b75d0298aa30fad8900671f
+  newName: harbor-repo.vmware.com/mlops/activator
+  newTag: v1.0-kubeflow-knative-serving-serving
+- name: gcr.io/knative-releases/knative.dev/serving/cmd/autoscaler@sha256:bc5ae3090ab0322ed0e4f9efddb60fa85f6ff3a29156411d24d0e4764b18eba7
+  newName: harbor-repo.vmware.com/mlops/autoscaler
+  newTag: v1.0-kubeflow-knative-serving-serving
+- name: gcr.io/knative-releases/knative.dev/serving/cmd/controller@sha256:bd7c6350e5d5c4edaa197a86fb96cff78bdd3e61f33fcb77aa60930de0ec0827
+  newName: harbor-repo.vmware.com/mlops/controller
+  newTag: v1.0-kubeflow-knative-serving-serving
+- name: gcr.io/knative-releases/knative.dev/serving/cmd/webhook@sha256:6f41d379f1aacdfbb8f6d4f539e1769040e4f01bff3ad9c249b427e54dc56ea8
+  newName: harbor-repo.vmware.com/mlops/webhook
+  newTag: v1.0-kubeflow-knative-serving-serving
+- name: docker.io/istio/proxyv2:1.9.6
+  newName: harbor-repo.vmware.com/mlops/istio-proxyv2
+  newTag: 1.9.6
