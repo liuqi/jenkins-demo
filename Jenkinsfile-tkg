@@ -1,0 +1,16 @@
+pipeline {
+    agent any
+    stages {
+        stage('Deploy') {
+            steps {
+                sh 'ls -la'
+                retry(3) {
+                    sh './tkg-cluster-deployer-zyj.sh'
+                }
+                
+                touch(file:"hello.txt")
+                sh 'ls -la'
+            }
+        }
+    }
+}
