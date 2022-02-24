@@ -9,7 +9,6 @@ pipeline {
                     sh './tkg-cluster-deployer-zyj.sh'
                 }
                 
-                touch(file:"hello.txt")
                 sh 'ls -la'
             }
         }
