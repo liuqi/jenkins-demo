@@ -72,13 +72,13 @@ done;
 
 echo "Control Plane Node is patched"
 
-sleep 200
+#sleep 200
 
-kubectl vsphere login --server=$server --vsphere-username administrator@vsphere.local --insecure-skip-tls-verify --tanzu-kubernetes-cluster-namespace=$ns --tanzu-kubernetes-cluster-name=tkgs-cluster-$number
-kubectl get sc pacific-storage-policy -o yaml > tmp-sc.yaml
-sed '/^parameters:.*/a\ \ csi.storage.k8s.io/fstype: "ext4"' -i tmp-sc.yaml
-kubectl replace -f tmp-sc.yaml --force
-kubectl get sc pacific-storage-policy -o yaml
-echo "Update storage policy -- done"
+#kubectl vsphere login --server=$server --vsphere-username administrator@vsphere.local --insecure-skip-tls-verify --tanzu-kubernetes-cluster-namespace=$ns --tanzu-kubernetes-cluster-name=tkgs-cluster-$number
+#kubectl get sc pacific-storage-policy -o yaml > tmp-sc.yaml
+#sed '/^parameters:.*/a\ \ csi.storage.k8s.io/fstype: "ext4"' -i tmp-sc.yaml
+#kubectl replace -f tmp-sc.yaml --force
+#kubectl get sc pacific-storage-policy -o yaml
+#echo "Update storage policy -- done"
 
 exit
