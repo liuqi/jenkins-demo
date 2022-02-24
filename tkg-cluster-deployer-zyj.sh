@@ -1,7 +1,7 @@
 #!/bin/bash
 
-number=24
-ns=zyajing
+number=14
+ns=clara
 server=10.117.233.2
 
 export PATH=00-kubectl-vsphere-plugin/bin:$PATH
@@ -19,7 +19,7 @@ metadata:
   namespace: $ns                         #vsphere namespace
 spec:
   distribution:
-    version: v1.19.11                         #Resolves to latest TKR 1.19 version
+    version: v1.19                         #Resolves to latest TKR 1.19 version
   topology:
     controlPlane:
       count: 1                             #number of control plane nodes
