@@ -5,7 +5,7 @@ pipeline {
             steps {
                 sh 'ls -la'
                 retry(3) {
-                    sh './tkg-cluster-deployer-zyj.sh'
+                    sh './tkg-cluster-deployer.sh'
                 }
                 sh 'ls -la'
             }
