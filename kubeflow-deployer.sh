@@ -1,10 +1,10 @@
 #!/bin/bash
 
-number=24
+number=20
 ns=zyajing
 server=10.117.233.2
 
-export PATH=00-kubectl-vsphere-plugin/bin:$PATH
+export PATH=./00-kubectl-vsphere-plugin/bin:$PATH
 export KUBECTL_VSPHERE_PASSWORD="Admin!23"
 
 kubectl vsphere login --server=$server --vsphere-username administrator@vsphere.local --insecure-skip-tls-verify
@@ -113,8 +113,23 @@ subjects:
 EOF
 echo "Patch PSP -- done"
 
-cd manifests-1.4-branch
-while ! kustomize build example | kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done
+while ! kustomize build ./manifests-1.4-branch/example | kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done
+cat << EOF | kubectl apply -f -
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: rb-all-sa_ns-kubeflow-user-example-com
+  namespace: kubeflow-user-example-com
+roleRef:
+  kind: ClusterRole
+  name: psp:vmware-system-privileged
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+- kind: Group
+  apiGroup: rbac.authorization.k8s.io
+  name: system:serviceaccounts:kubeflow-user-example-com
+EOF
+
 echo "deploy kubeflow -- done"
 
 exit
