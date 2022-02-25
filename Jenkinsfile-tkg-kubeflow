@@ -14,7 +14,7 @@ pipeline {
             steps {
                 sh 'ls -la'
                 retry(3) {
-                    sh './kubeflow-deployer.sh'
+                    sh './kubeflow-deployer-individual.sh'
                 }
                 sh 'ls -la'
             }
