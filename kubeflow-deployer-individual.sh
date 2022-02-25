@@ -4,7 +4,7 @@ number=23
 ns=zyajing
 server=10.117.233.2
 
-export PATH=/home/liuqi/00-kubectl-vsphere-plugin/bin:$PATH
+export PATH=./00-kubectl-vsphere-plugin/bin:$PATH
 export KUBECTL_VSPHERE_PASSWORD="Admin!23"
 
 kubectl vsphere login --server=$server --vsphere-username administrator@vsphere.local --insecure-skip-tls-verify --tanzu-kubernetes-cluster-namespace=$ns --tanzu-kubernetes-cluster-name=tkgs-cluster-$number
