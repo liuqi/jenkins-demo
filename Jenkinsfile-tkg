@@ -6,7 +6,7 @@ pipeline {
                 sh 'ls -la'
                 sh "chmod +x -R ${env.WORKSPACE}"
                 retry(3) {
-                    sh './tkg-cluster-deployer-zyj.sh'
+                    sh './tkg-cluster-deployer.sh'
                 }
                 
                 sh 'ls -la'
