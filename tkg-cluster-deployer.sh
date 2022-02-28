@@ -12,8 +12,8 @@ do
     esac
 done
 
-echo "value ns is $a"
-echo "value number is $b"
+# echo "value ns is $a"
+# echo "value number is $b"
 
 number=$b
 ns=$a

@@ -2,26 +2,26 @@ pipeline {
     agent any
     stages {
         stage('DeployTKG') {
-            input {
-                message "Should we continue?"
-                ok "Yes, we should."
-                submitter "alice,bob"
-                parameters {
-                    string(name: 'NAMESPACE', defaultValue: 'zyajing', description: 'Please input namespace.')
-                    string(name: 'NUMBER', defaultValue: '01', description: 'Please input cluster name.')
-                }
-            }
             steps {
+                script {
+                    // Show the select input modal
+                    def INPUT_PARAMS = input message: 'Please Provide Parameters', ok: 'Next',
+                    parameters: [
+                        string(name: 'NAMESPACE', defaultValue: 'zyajing', description: 'Please input namespace'),
+                        string(name: 'NUMBER', defaultValue: '01', description: 'Please input cluster number')]
+                    env.NAMESPACE = INPUT_PARAMS.NAMESPACE
+                    env.NUMBER = INPUT_PARAMS.NUMBER
+                }
                 sh 'ls -la'
-                echo "Namespace is ${NAMESPACE}, cluster number is ${NUMBER}."
-                sh "NAMESPACE=${NAMESPACE}; NUMBER=${NUMBER};" + './tkg-cluster-deployer.sh -a ${NAMESPACE} -b ${NUMBER}'
+                echo "Namespace is ${env.NAMESPACE}, cluster number is ${env.NUMBER}."
+                sh "NAMESPACE=${env.NAMESPACE}; NUMBER=${env.NUMBER};" + './tkg-cluster-deployer.sh -a ${env.NAMESPACE} -b ${env.NUMBER}'
             }
         }
         stage('DeployKubeflow') {
             steps {
                 sh 'ls -la'
                 retry(3) {
-                    sh "NAMESPACE=${NAMESPACE}; NUMBER=${NUMBER};" + './kubeflow-deployer-individual.sh -a ${NAMESPACE} -b ${NUMBER}'
+                    sh "NAMESPACE=${env.NAMESPACE}; NUMBER=${env.NUMBER};" + './kubeflow-deployer-individual.sh -a ${env.NAMESPACE} -b ${env.NUMBER}'
                 }
             }
         }
