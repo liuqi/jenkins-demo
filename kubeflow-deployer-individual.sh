@@ -1,7 +1,25 @@
 #!/bin/bash
 
-number=26
-ns=zyajing
+while getopts ":ns:number:" opt
+do
+    case $opt in
+        ns)
+        echo "value ns is $OPTARG"; ns=$OPTARG
+        ;;
+        number)
+        echo "value number is $OPTARG"; number=$OPTARG
+        ;;
+        ?)
+        echo "Unknown parameter"
+        exit 1;;
+    esac
+done
+
+echo "value ns is $ns"
+echo "value number is $number"
+
+number=$number
+ns=$ns
 server=10.117.233.2
 
 export PATH=./00-kubectl-vsphere-plugin/bin:$PATH

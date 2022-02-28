@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+    stages {
+        stage('DeployTKG') {
+            input {
+                message "Should we continue?"
+                ok "Yes, we should."
+                submitter "alice,bob"
+                parameters {
+                    string(name: 'NAMESPACE', defaultValue: 'zyajing', description: 'Please input namespace.')
+                    string(name: 'NUMBER', defaultValue: '01', description: 'Please input cluster name.')
+                }
+            }
+            steps {
+                sh 'ls -la'
+                echo "Namespace is ${NAMESPACE}, cluster number is ${NUMBER}."
+                sh "NAMESPACE=${NAMESPACE}; NUMBER=${NUMBER};" + './tkg-cluster-deployer.sh -ns ${NAMESPACE} -number ${NUMBER}'
+            }
+        }
+        stage('DeployKubeflow') {
+            steps {
+                sh 'ls -la'
+                retry(3) {
+                    sh "NAMESPACE=${NAMESPACE}; NUMBER=${NUMBER};" + './kubeflow-deployer-individual.sh -ns ${NAMESPACE} -number ${NUMBER}'
+                }
+            }
+        }
+    }
+}
