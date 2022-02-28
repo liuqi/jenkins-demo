@@ -13,9 +13,9 @@ pipeline {
                     parameters: [
                         string(name: 'NAMESPACE', defaultValue: 'zyajing', description: 'Please input namespace'),
                         string(name: 'NUMBER', defaultValue: '01', description: 'Please input cluster number')]
-                        env.namespace = ${INPUT_PARAMS.NAMESPACE}
-                        env.number = ${INPUT_PARAMS.NUMBER}
                     )
+                    env.namespace = ${INPUT_PARAMS.NAMESPACE}
+                    env.number = ${INPUT_PARAMS.NUMBER}
                 }
                 sh 'ls -la'
                 echo "Namespace is ${INPUT_PARAMS.NAMESPACE}, cluster number is ${INPUT_PARAMS.NUMBER}."
