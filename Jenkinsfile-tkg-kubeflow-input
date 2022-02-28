@@ -28,10 +28,8 @@ pipeline {
                 sh 'ls -la'
                 retry(3) {
                 echo "Namespace is ${INPUT_PARAMS.NAMESPACE}, cluster number is ${INPUT_PARAMS.NUMBER}."
-                namespace = ${INPUT_PARAMS.NAMESPACE}
-                number = ${INPUT_PARAMS.NUMBER}
                 echo "Namespace is ${namespace}, cluster number is ${number}."
-                    sh './kubeflow-deployer-individual.sh -a ${namespace} -b ${number}'
+                    sh "./kubeflow-deployer-individual.sh -a ${env.namespace} -b ${env.number}"
                 }
             }
         }
