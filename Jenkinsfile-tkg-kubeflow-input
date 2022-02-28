@@ -7,18 +7,16 @@ pipeline {
             steps {
                 script {
                     // Show the select input modal
-                    INPUT_PARAMS = input (
-                    message: 'Please Provide Parameters', 
-                    ok: 'Next',
-                    parameters: [
-                        string(name: 'NAMESPACE', defaultValue: 'zyajing', description: 'Please input namespace'),
-                        string(name: 'NUMBER', defaultValue: '01', description: 'Please input cluster number')]
-                    )
-                    env.namespace = ${INPUT_PARAMS.NAMESPACE}
-                    env.number = ${INPUT_PARAMS.NUMBER}
+                    env.namespace = input message: 'Please enter the namespace',
+                                     parameters: [string(defaultValue: '',
+                                                  description: '',
+                                                  name: 'Namespace')]
+                    env.number = input message: 'Please enter the number',
+                                     parameters: [password(defaultValue: '',
+                                                  description: '',
+                                                  name: 'Number')]
                 }
                 sh 'ls -la'
-                echo "Namespace is ${INPUT_PARAMS.NAMESPACE}, cluster number is ${INPUT_PARAMS.NUMBER}."
                 echo "Namespace is ${env.namespace}, cluster number is ${env.number}."
                 sh "./tkg-cluster-deployer.sh -a ${env.namespace} -b ${env.number}"
             }
