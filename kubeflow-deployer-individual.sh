@@ -9,9 +9,6 @@ do
         number)
         echo "value number is $OPTARG"; number=$OPTARG
         ;;
-        ?)
-        echo "Unknown parameter"
-        exit 1;;
     esac
 done
 
