@@ -1,22 +1,22 @@
 #!/bin/bash
 
-while getopts ":ns:number:" opt
+while getopts ":a:b:" opt
 do
     case $opt in
-        ns)
-        echo "value ns is $OPTARG"; ns=$OPTARG
+        a)
+        echo "value ns is $OPTARG"; a=$OPTARG
         ;;
-        number)
-        echo "value number is $OPTARG"; number=$OPTARG
+        b)
+        echo "value number is $OPTARG"; b=$OPTARG
         ;;
     esac
 done
 
-echo "value ns is $ns"
-echo "value number is $number"
+echo "value ns is $a"
+echo "value number is $b"
 
-number=$number
-ns=$ns
+number=$b
+ns=$a
 server=10.117.233.2
 
 export PATH=./00-kubectl-vsphere-plugin/bin:$PATH

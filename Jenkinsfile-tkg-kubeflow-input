@@ -14,14 +14,14 @@ pipeline {
             steps {
                 sh 'ls -la'
                 echo "Namespace is ${NAMESPACE}, cluster number is ${NUMBER}."
-                sh "NAMESPACE=${NAMESPACE}; NUMBER=${NUMBER};" + './tkg-cluster-deployer.sh -ns ${NAMESPACE} -number ${NUMBER}'
+                sh "NAMESPACE=${NAMESPACE}; NUMBER=${NUMBER};" + './tkg-cluster-deployer.sh -a ${NAMESPACE} -b ${NUMBER}'
             }
         }
         stage('DeployKubeflow') {
             steps {
                 sh 'ls -la'
                 retry(3) {
-                    sh "NAMESPACE=${NAMESPACE}; NUMBER=${NUMBER};" + './kubeflow-deployer-individual.sh -ns ${NAMESPACE} -number ${NUMBER}'
+                    sh "NAMESPACE=${NAMESPACE}; NUMBER=${NUMBER};" + './kubeflow-deployer-individual.sh -a ${NAMESPACE} -b ${NUMBER}'
                 }
             }
         }
