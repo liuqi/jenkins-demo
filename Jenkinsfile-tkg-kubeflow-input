@@ -19,14 +19,21 @@ pipeline {
                 }
                 sh 'ls -la'
                 echo "Namespace is ${INPUT_PARAMS.NAMESPACE}, cluster number is ${INPUT_PARAMS.NUMBER}."
-                sh './tkg-cluster-deployer.sh -a ${INPUT_PARAMS.NAMESPACE} -b ${INPUT_PARAMS.NUMBER}'
+                namespace = ${INPUT_PARAMS.NAMESPACE}
+                number = ${INPUT_PARAMS.NUMBER}
+                echo "Namespace is ${namespace}, cluster number is ${number}."
+                sh './tkg-cluster-deployer.sh -a ${namespace} -b ${number}'
             }
         }
         stage('DeployKubeflow') {
             steps {
                 sh 'ls -la'
                 retry(3) {
-                    sh './kubeflow-deployer-individual.sh -a ${INPUT_PARAMS.NAMESPACE} -b ${INPUT_PARAMS.NUMBER}'
+                echo "Namespace is ${INPUT_PARAMS.NAMESPACE}, cluster number is ${INPUT_PARAMS.NUMBER}."
+                namespace = ${INPUT_PARAMS.NAMESPACE}
+                number = ${INPUT_PARAMS.NUMBER}
+                echo "Namespace is ${namespace}, cluster number is ${number}."
+                    sh './kubeflow-deployer-individual.sh -a ${namespace} -b ${number}'
                 }
             }
         }
