@@ -165,13 +165,31 @@ kustomize build manifests-1.4-branch/common/oidc-authservice/base | kubectl appl
 
 echo "Install Knative Serving"
 
-kustomize build manifests-1.4-branch/common/knative/knative-serving/base | kubectl apply -f -
-kustomize build manifests-1.4-branch/common/istio-1-9/cluster-local-gateway/base | kubectl apply -f -
+while true; do
+  kustomize build manifests-1.4-branch/common/knative/knative-serving/base | kubectl apply -f -
+  if [[ $? == 0 ]]; then
+    break
+  fi
+  sleep 10
+  echo "Wait knative-serving base finish..."
+done
 
-sleep 10
-echo "Install Knative Serving again"
-kustomize build manifests-1.4-branch/common/knative/knative-serving/base | kubectl apply -f -
-kustomize build manifests-1.4-branch/common/istio-1-9/cluster-local-gateway/base | kubectl apply -f -
+while true; do
+  kustomize build manifests-1.4-branch/common/istio-1-9/cluster-local-gateway/base | kubectl apply -f -
+  if [[ $? == 0 ]]; then
+    break
+  fi
+  sleep 10
+  echo "Wait cluster-local-gateway base finish..."
+done
+
+# kustomize build manifests-1.4-branch/common/knative/knative-serving/base | kubectl apply -f -
+# kustomize build manifests-1.4-branch/common/istio-1-9/cluster-local-gateway/base | kubectl apply -f -
+
+# sleep 10
+# echo "Install Knative Serving again"
+# kustomize build manifests-1.4-branch/common/knative/knative-serving/base | kubectl apply -f -
+# kustomize build manifests-1.4-branch/common/istio-1-9/cluster-local-gateway/base | kubectl apply -f -
 
 echo "Install kubeflow namespace"
 
@@ -188,11 +206,19 @@ kustomize build manifests-1.4-branch/common/istio-1-9/kubeflow-istio-resources/b
 echo "Install kubeflow pipelines"
 
 # run twice to avoid...
-kustomize build manifests-1.4-branch/apps/pipeline/upstream/env/platform-agnostic-multi-user-pns | kubectl apply -f -
+while true; do
+  kustomize build manifests-1.4-branch/apps/pipeline/upstream/env/platform-agnostic-multi-user-pns | kubectl apply -f -
+  if [[ $? == 0 ]]; then
+    break
+  fi
+  sleep 10
+  echo "Wait kubeflow pipelines finish..."
+done
 
-sleep 10
-echo "Install kubeflow pipelines again"
-kustomize build manifests-1.4-branch/apps/pipeline/upstream/env/platform-agnostic-multi-user-pns | kubectl apply -f -
+# kustomize build manifests-1.4-branch/apps/pipeline/upstream/env/platform-agnostic-multi-user-pns | kubectl apply -f -
+# sleep 10
+# echo "Install kubeflow pipelines again"
+# kustomize build manifests-1.4-branch/apps/pipeline/upstream/env/platform-agnostic-multi-user-pns | kubectl apply -f -
 
 echo "Install KFServing"
 
@@ -247,7 +273,7 @@ echo "Create user namespace"
 kustomize build manifests-1.4-branch/common/user-namespace/base | kubectl apply -f -
 
 # while true; do
-#   kubectl get ns|grep kubeflow-user-example-com
+#   kubectl get ns|grep kubeflow-user-example-com | grep Active
 #   if [[ $? == 0 ]]; then
 #     break
 #   fi
@@ -255,17 +281,22 @@ kustomize build manifests-1.4-branch/common/user-namespace/base | kubectl apply 
 #   echo "Wait kubeflow-user-example-com namespace creating finish..."
 # done
 
-while true; do
-  kubectl create ns kubeflow-user-example-com
-  if [[ $? == 0 ]]; then
-    break
-  fi
-  sleep 10
-  echo "Wait create kubeflow-user-example-com..."
-done
+# while true; do
+#   kubectl create ns kubeflow-user-example-com
+#   if [[ $? == 0 ]]; then
+#     break
+#   fi
+#   sleep 10
+#   echo "Wait create kubeflow-user-example-com..."
+# done
 
 echo "Fix PSP"
 cat << EOF | kubectl apply -f -
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kubeflow-user-example-com
+---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
