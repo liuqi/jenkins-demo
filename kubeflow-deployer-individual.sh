@@ -1,6 +1,6 @@
 #!/bin/bash
 
-number=25
+number=26
 ns=zyajing
 server=10.117.233.2
 
@@ -8,8 +8,18 @@ export PATH=./00-kubectl-vsphere-plugin/bin:$PATH
 export KUBECTL_VSPHERE_PASSWORD="Admin!23"
 
 kubectl vsphere login --server=$server --vsphere-username administrator@vsphere.local --insecure-skip-tls-verify --tanzu-kubernetes-cluster-namespace=$ns --tanzu-kubernetes-cluster-name=tkgs-cluster-$number
+kubectl config use-context tkgs-cluster-$number
 
 echo "Patch PSP"
+
+while true; do
+  kubectl create ns auth
+  if [[ $? == 0 ]]; then
+    break
+  fi
+  sleep 10
+  echo "Wait connect to the server..."
+done
 
 cat << EOF | kubectl apply -f -
 apiVersion: v1
@@ -115,13 +125,28 @@ EOF
 # echo "Install cert-manager"
 echo "Install cert-manager"
 # run twice to avoid STDIN
-kustomize build manifests-1.4-branch/common/cert-manager/cert-manager/base | kubectl apply -f -
-kustomize build manifests-1.4-branch/common/cert-manager/kubeflow-issuer/base | kubectl apply -f -
+while true; do
+  kustomize build manifests-1.4-branch/common/cert-manager/cert-manager/base | kubectl apply -f -
+  if [[ $? == 0 ]]; then
+    break
+  fi
+  sleep 10
+  echo "Wait cert-manager base finish..."
+done
 
-sleep 10
-echo "Install cert-manager again"
-kustomize build manifests-1.4-branch/common/cert-manager/cert-manager/base | kubectl apply -f -
-kustomize build manifests-1.4-branch/common/cert-manager/kubeflow-issuer/base | kubectl apply -f -
+while true; do
+  kustomize build manifests-1.4-branch/common/cert-manager/kubeflow-issuer/base | kubectl apply -f -
+  if [[ $? == 0 ]]; then
+    break
+  fi
+  sleep 10
+  echo "Wait cert-manager kubeflow-issuer finish..."
+done
+
+# sleep 10
+# echo "Install cert-manager again"
+# kustomize build manifests-1.4-branch/common/cert-manager/cert-manager/base | kubectl apply -f -
+# kustomize build manifests-1.4-branch/common/cert-manager/kubeflow-issuer/base | kubectl apply -f -
 
 echo "Install istio"
 # patch api server here
@@ -221,13 +246,22 @@ echo "Create user namespace"
 
 kustomize build manifests-1.4-branch/common/user-namespace/base | kubectl apply -f -
 
+# while true; do
+#   kubectl get ns|grep kubeflow-user-example-com
+#   if [[ $? == 0 ]]; then
+#     break
+#   fi
+#   sleep 10
+#   echo "Wait kubeflow-user-example-com namespace creating finish..."
+# done
+
 while true; do
-  kubectl get ns|grep kubeflow-user-example-com
+  kubectl create ns kubeflow-user-example-com
   if [[ $? == 0 ]]; then
     break
   fi
   sleep 10
-  echo "Wait kubeflow-user-example-com namespace creating finish..."
+  echo "Wait create kubeflow-user-example-com..."
 done
 
 echo "Fix PSP"
@@ -246,3 +280,5 @@ subjects:
   apiGroup: rbac.authorization.k8s.io
   name: system:serviceaccounts:kubeflow-user-example-com
 EOF
+
+exit

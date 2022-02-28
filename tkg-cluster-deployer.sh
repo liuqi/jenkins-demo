@@ -1,6 +1,6 @@
 #!/bin/bash
 
-number=25
+number=26
 ns=zyajing
 server=10.117.233.2
 
