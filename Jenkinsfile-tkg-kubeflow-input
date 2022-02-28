@@ -12,7 +12,7 @@ pipeline {
                                                   description: '',
                                                   name: 'Namespace')]
                     env.number = input message: 'Please enter the number',
-                                     parameters: [password(defaultValue: '',
+                                     parameters: [string(defaultValue: '',
                                                   description: '',
                                                   name: 'Number')]
                 }
@@ -25,8 +25,6 @@ pipeline {
             steps {
                 sh 'ls -la'
                 retry(3) {
-                echo "Namespace is ${INPUT_PARAMS.NAMESPACE}, cluster number is ${INPUT_PARAMS.NUMBER}."
-                echo "Namespace is ${namespace}, cluster number is ${number}."
                     sh "./kubeflow-deployer-individual.sh -a ${env.namespace} -b ${env.number}"
                 }
             }
